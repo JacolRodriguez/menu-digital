@@ -1,0 +1,96 @@
+import React from 'react';
+
+export default function ProductModal({ item, isOpen, onClose, quantity, onAdd, onRemove }) {
+  if (!isOpen || !item) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Fondo oscuro con desenfoque */}
+      <div 
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"
+        onClick={onClose}
+      ></div>
+
+      {/* Ventana Modal */}
+      <div className="relative w-full max-w-md bg-slate-900 border border-white/10 rounded-3xl overflow-hidden shadow-2xl z-10">
+        
+        {/* Botón de cerrar */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 bg-slate-950/60 hover:bg-slate-950 text-slate-300 hover:text-white p-2.5 rounded-full backdrop-blur-md transition"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
+        {/* Imagen Ampliada */}
+        <div className="w-full h-56 relative bg-slate-800">
+          <img 
+            src={item.image} 
+            alt={item.name} 
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.src = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80";
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+        </div>
+
+        {/* Detalles del Producto */}
+        <div className="p-6 space-y-4">
+          <div>
+            <h3 className="text-xl font-black text-white tracking-tight">{item.name}</h3>
+            <p className="text-red-400 font-extrabold text-lg mt-1">${item.price}</p>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Descripción Completa</h4>
+            <p className="text-sm text-slate-300 leading-relaxed bg-slate-950/40 p-3.5 rounded-2xl border border-white/5">
+              {item.description}
+            </p>
+          </div>
+
+          {/* Acciones dentro del modal */}
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-medium">
+              {quantity > 0 ? `En tu carrito: ${quantity}` : 'Aún no agregado'}
+            </span>
+
+            <div className="flex items-center gap-3">
+              {quantity === 0 ? (
+                <button 
+                  onClick={() => {
+                    onAdd(item);
+                  }}
+                  className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-red-600/30 active:scale-95 flex items-center gap-2"
+                >
+                  <span>Agregar al pedido</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                </button>
+              ) : (
+                <div className="flex items-center bg-slate-800 rounded-xl border border-red-500/40 overflow-hidden shadow-md">
+                  <button 
+                    onClick={() => onRemove(item.id)}
+                    className="px-3.5 py-2 text-slate-300 hover:bg-slate-700 transition font-bold text-xs"
+                  >
+                    -
+                  </button>
+                  <span className="px-3 text-xs font-bold text-red-400">{quantity}</span>
+                  <button 
+                    onClick={() => onAdd(item)}
+                    className="px-3.5 py-2 text-slate-300 hover:bg-slate-700 transition font-bold text-xs"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

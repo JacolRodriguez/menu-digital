@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/https://github.com/JacolRodriguez/menu-digital.git/', // <--- ¡Importante! Pon aquí el nombre exacto de tu repo entre barras
+  base: '/menu-digital/', // <--- ¡Importante! Pon aquí el nombre exacto de tu repo entre barras
 })

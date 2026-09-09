@@ -8,7 +8,7 @@ export const menuData = {
     { id: "hamburguesas", name: "🍔 Hamburguesas" },
     { id: "tacos", name: "🌮 Tacos" },
     { id: "sandwiches", name: "🥪 Sandwiches" },
-    { id: "picaderas", name: "🍗 Picaderas y Pollo" },
+    { id: "picaderas", name: "🍗 Pica Pollo" },
     { id: "yaroas", name: "🍟 Yaroas" },
     { id: "bebidas", name: "🥤 Bebidas" }
   ],
@@ -105,7 +105,7 @@ export const menuData = {
       name: "Club Sandwich Tradicional",
       description: "Tres capas de pan tostado con jamón, queso, pollo desmenuzado, bacon, lechuga y tomate. Acompañado de papas fritas.",
       price: 280,
-      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80"
+      image: "https://cafedelaflor.com/images/productos/202306011605339.jpg"
     },
     {
       id: 12,
@@ -113,7 +113,7 @@ export const menuData = {
       name: "Sandwich de Jamón y Queso",
       description: "Pan de agua o de molde tostado a la plancha, relleno de abundante jamón y queso danés derretido.",
       price: 120,
-      image: "https://images.unsplash.com/photo-1553909489-cd47ce7ea9aa?auto=format&fit=crop&w=500&q=80"
+      image: "https://recetinas.com/wp-content/uploads/2022/06/sandwich-de-tomate-jamon-y-queso.jpg"
     },
 
     // --- PICADERAS Y POLLO ---
@@ -149,7 +149,7 @@ export const menuData = {
       name: "Yaroa de Papas Fritas",
       description: "Base de papas fritas crujientes, cubierta de carne a elegir (pollo, res o pierna), mucho queso derretido, kétchup y mayonesa.",
       price: 200,
-      image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=500&q=80"
+      image: "https://static.wixstatic.com/media/ca5c65_060997d8bfb648ffb07ac2bb492a9cda~mv2.png/v1/fill/w_1536,h_1024,al_c/ChatGPT%20Image%2021%20ene%202026%2C%2002_21_23%20p.m..png"
     },
 
     // --- BEBIDAS ---

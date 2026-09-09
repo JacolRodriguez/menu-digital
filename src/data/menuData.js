@@ -1,9 +1,32 @@
+/**
+ * ARCHIVO DE CONFIGURACIÓN Y DATOS DEL MENÚ (menuData.js)
+ * -------------------------------------------------------------
+ * Este archivo funciona como la fuente única de verdad para la aplicación estática.
+ * Cualquier cambio en nombres, precios, fotos o información del local se realiza
+ * directamente aquí sin necesidad de modificar los componentes de React.
+ */
+
 export const menuData = {
+  // =========================================================================
+  // INFORMACIÓN GENERAL DEL NEGOCIO
+  // =========================================================================
   restaurantName: "D' Lucy Sabor Familiar",
+  
+  // Número de WhatsApp al que llegarán los pedidos (Código de país + área + número, sin signos ni espacios)
   whatsappNumber: "18096277777",
+  
+  // Dirección física que se mostrará en el encabezado del menú
   address: "Esq. Josesito, D.M. Baitoa, Santiago, R.D.",
+  
+  // Ruta del logotipo compatible con GitHub Pages mediante la variable de entorno base de Vite
   logo: `${import.meta.env.BASE_URL}D-LUCY-Sabor-Familiar-burger.jpg`,
   
+  // =========================================================================
+  // LISTA DE CATEGORÍAS DISPONIBLES
+  // -------------------------------------------------------------------------
+  // El 'id' debe coincidir exactamente con el campo 'category' de los productos.
+  // El 'name' es el texto visible (incluye emojis para impacto visual).
+  // =========================================================================
   categories: [
     { id: "hamburguesas", name: "🍔 Hamburguesas" },
     { id: "hotdogs", name: "🌭 Hot Dogs" },
@@ -17,8 +40,21 @@ export const menuData = {
     { id: "bebidas", name: "🥤 Bebidas" }
   ],
   
+  // =========================================================================
+  // CATÁLOGO DE PRODUCTOS (ITEMS)
+  // -------------------------------------------------------------------------
+  // Cada elemento debe contar con:
+  // - id: Número entero único para identificación y claves de React.
+  // - category: Coincidente con un 'id' de la lista de categorías superior.
+  // - name: Nombre del plato o bebida.
+  // - description: Ingredientes o detalles del servicio.
+  // - price: Valor numérico en Pesos Dominicanos (RD$).
+  // - image: URL pública (HTTPS) de la fotografía referencial del producto.
+  // =========================================================================
   items: [
-    // --- HAMBURGUESAS (Con y sin papas por separado) ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: HAMBURGUESAS
+    // -----------------------------------------------------------------------
     {
       id: 1,
       category: "hamburguesas",
@@ -68,7 +104,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- HOT DOGS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: HOT DOGS
+    // -----------------------------------------------------------------------
     {
       id: 7,
       category: "hotdogs",
@@ -86,7 +124,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1627993262614-239c5eb44501?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- TACOS (UNIDAD) ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: TACOS
+    // -----------------------------------------------------------------------
     {
       id: 9,
       category: "tacos",
@@ -120,7 +160,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- BURRITOS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: BURRITOS
+    // -----------------------------------------------------------------------
     {
       id: 13,
       category: "burritos",
@@ -138,7 +180,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1566740933434-b5b6a5b98b2e?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- QUESADILLAS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: QUESADILLAS
+    // -----------------------------------------------------------------------
     {
       id: 15,
       category: "quesadillas",
@@ -156,7 +200,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- SALCHIPAPAS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: SALCHIPAPAS
+    // -----------------------------------------------------------------------
     {
       id: 17,
       category: "salchipapas",
@@ -174,7 +220,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- SANDWICHES ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: SANDWICHES
+    // -----------------------------------------------------------------------
     {
       id: 19,
       category: "sandwiches",
@@ -192,7 +240,9 @@ export const menuData = {
       image: "https://recetinas.com/wp-content/uploads/2022/06/sandwich-de-tomate-jamon-y-queso.jpg"
     },
 
-    // --- PICADERAS Y POLLO ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: PICADERAS Y POLLO
+    // -----------------------------------------------------------------------
     {
       id: 21,
       category: "picaderas",
@@ -210,7 +260,9 @@ export const menuData = {
       image: "https://images.unsplash.com/photo-1569691899455-88464f6d3ab1?auto=format&fit=crop&w=500&q=80"
     },
 
-    // --- YAROAS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: YAROAS
+    // -----------------------------------------------------------------------
     {
       id: 23,
       category: "yaroas",
@@ -228,7 +280,9 @@ export const menuData = {
       image: "https://static.wixstatic.com/media/ca5c65_060997d8bfb648ffb07ac2bb492a9cda~mv2.png/v1/fill/w_1536,h_1024,al_c/ChatGPT%20Image%2021%20ene%202026%2C%2002_21_23%20p.m..png"
     },
 
-    // --- BEBIDAS ---
+    // -----------------------------------------------------------------------
+    // SECCIÓN: BEBIDAS
+    // -----------------------------------------------------------------------
     {
       id: 25,
       category: "bebidas",

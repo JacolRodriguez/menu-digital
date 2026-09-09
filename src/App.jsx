@@ -5,19 +5,50 @@ import CategorySidebar from './components/CategorySidebar';
 import MenuItemCard from './components/MenuItemCard';
 import ProductModal from './components/ProductModal';
 
+/**
+ * COMPONENTE PRINCIPAL: App.jsx
+ * -------------------------------------------------------------
+ * Administra el catálogo de productos, el filtrado por categorías,
+ * la persistencia del carrito en memoria, la selección de modalidad (Delivery/Retiro)
+ * y la estructuración del mensaje final para la API de WhatsApp.
+ */
 export default function App() {
+  // =========================================================================
+  // ESTADOS DE LA APLICACIÓN
+  // =========================================================================
+  
+  // Categoría activa seleccionada ('all' para mostrar todo el catálogo)
   const [activeCategory, setActiveCategory] = useState('all');
+  
+  // Control de visibilidad del Drawer lateral de categorías
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  // Objeto de carrito: { [itemId]: { name, price, quantity } }
   const [cart, setCart] = useState({});
+  
+  // Modalidad del pedido: 'pickup' (Retiro en local) o 'delivery' (A domicilio)
   const [orderType, setOrderType] = useState('pickup');
   
+  // Producto actualmente seleccionado para inspección en el modal
   const [selectedProduct, setSelectedProduct] = useState(null);
+  
+  // Control de visibilidad del modal de detalle
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // =========================================================================
+  // LÓGICA DE FILTRADO
+  // =========================================================================
   const filteredItems = activeCategory === 'all'
     ? menuData.items
     : menuData.items.filter(item => item.category === activeCategory);
 
+  // =========================================================================
+  // GESTIÓN DEL CARRITO (MUTACIONES SEGURAS)
+  // =========================================================================
+
+  /**
+   * Añade un producto al carrito o incrementa su cantidad si ya existe.
+   */
   const handleAdd = (item) => {
     setCart(prev => ({
       ...prev,
@@ -29,8 +60,13 @@ export default function App() {
     }));
   };
 
+  /**
+   * Reduce la cantidad de un producto o lo elimina del carrito si llega a 0.
+   * Incluye guarda de seguridad para evitar excepciones de tipo undefined.
+   */
   const handleRemove = (itemId) => {
     setCart(prev => {
+      if (!prev[itemId]) return prev; // Previene fallos si el producto no está en el carrito
       const copy = { ...prev };
       if (copy[itemId].quantity > 1) {
         copy[itemId].quantity -= 1;
@@ -41,24 +77,45 @@ export default function App() {
     });
   };
 
+  // Cálculos dinámicos de totales para el carrito
   const totalItemsCount = Object.values(cart).reduce((acc, curr) => acc + curr.quantity, 0);
   const totalPrice = Object.values(cart).reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
 
+  // =========================================================================
+  // GENERACIÓN DEL TICKET Y ENLACE DE WHATSAPP
+  // =========================================================================
+
+  /**
+   * Ensambla el ticket de pedido con numeración correlativa y lo envía a WhatsApp.
+   */
   const handleSendWhatsAppOrder = () => {
     const serviceType = orderType === 'delivery' ? '🛵 Delivery a domicilio' : '🥡 Retirar en local';
+    
+    // Fechas y horas formateadas en zona horaria local
     const now = new Date();
     const dateStr = now.toLocaleDateString('es-DO', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const timeStr = now.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' });
     
-    let currentTicket = parseInt(localStorage.getItem('korexdev_ticket_seq') || '1', 10);
-    const ticketNumber = String(currentTicket).padStart(3, '0');
-    localStorage.setItem('korexdev_ticket_seq', currentTicket + 1);
+    // Lectura segura del número de ticket en localStorage
+    let currentTicket = 1;
+    try {
+      const storedTicket = localStorage.getItem('korexdev_ticket_seq');
+      currentTicket = storedTicket ? parseInt(storedTicket, 10) : 1;
+      if (isNaN(currentTicket)) currentTicket = 1;
+      localStorage.setItem('korexdev_ticket_seq', String(currentTicket + 1));
+    } catch {
+      // Fallback si el almacenamiento local está restringido por el navegador
+      currentTicket = Math.floor(Math.random() * 900) + 100;
+    }
 
+    const ticketNumber = String(currentTicket).padStart(3, '0');
+
+    // Estructura visual del ticket en texto plano formateado con Markdown de WhatsApp
     let message = `*🧾 TICKET DE PEDIDO #${ticketNumber}*\n`;
     message += `🏪 *${menuData.restaurantName}*\n`;
     message += `📅 Fecha: ${dateStr} - ${timeStr}\n`;
     message += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-    message += ` *Modalidad:* ${serviceType}\n`;
+    message += `📍 *Modalidad:* ${serviceType}\n`;
     message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
     
     message += `🛒 *DETALLE DE PRODUCTOS:*\n`;
@@ -75,16 +132,26 @@ export default function App() {
     message += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
     message += `_¡Hola! Quedo atento/a a la confirmación de este pedido y el total final._ ✨`;
 
+    // Codificación segura de caracteres para evitar URLs truncadas
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/${menuData.whatsappNumber}?text=${encoded}`, '_blank');
+    const whatsappUrl = `https://wa.me/${menuData.whatsappNumber}?text=${encoded}`;
+    
+    // Apertura protegida contra Reverse Tabnabbing
+    const newWindow = window.open(whatsappUrl, '_blank');
+    if (newWindow) {
+      newWindow.opener = null;
+    }
   };
 
+  // Nombre de la categoría actual visible en el filtro
   const currentCategoryName = activeCategory === 'all' 
     ? '🔥 Todos los productos' 
     : menuData.categories.find(c => c.id === activeCategory)?.name || '';
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-44 selection:bg-red-600 selection:text-white">
+      
+      {/* Encabezado fijo con datos del establecimiento */}
       <Header 
         restaurantName={menuData.restaurantName} 
         address={menuData.address} 
@@ -92,6 +159,7 @@ export default function App() {
         onOpenSidebar={() => setIsSidebarOpen(true)}
       />
       
+      {/* Panel lateral deslizable para navegación de categorías */}
       <CategorySidebar 
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -102,6 +170,7 @@ export default function App() {
         logo={menuData.logo}
       />
 
+      {/* Modal emergente para detalle y cantidades del producto */}
       <ProductModal 
         item={selectedProduct}
         isOpen={isModalOpen}
@@ -114,14 +183,14 @@ export default function App() {
         onRemove={handleRemove}
       />
 
-      {/* Ancho adaptable: se expande en pantallas medianas y grandes como el iPad Pro */}
+      {/* Indicador de categoría activa */}
       <div className="max-w-md md:max-w-3xl lg:max-w-4xl mx-auto px-4 pt-4 pb-2">
         <h2 className="w-full block text-center text-sm font-bold uppercase tracking-wider text-slate-400 bg-slate-900/60 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/5 shadow-sm">
           Mostrando: <span className="text-red-400">{currentCategoryName}</span>
         </h2>
       </div>
 
-      {/* Contenedor de productos en Grid: 1 columna en móvil, 2 columnas en iPad en adelante */}
+      {/* Cuadrícula responsiva de platillos (1 col en móvil, 2 col en tablet/escritorio) */}
       <main className="max-w-md md:max-w-3xl lg:max-w-4xl mx-auto p-4 pt-1 grid grid-cols-1 md:grid-cols-2 gap-3.5">
         {filteredItems.map(item => (
           <MenuItemCard 
@@ -138,22 +207,23 @@ export default function App() {
         ))}
       </main>
 
-      {/* --- FOOTER KOREXDEV --- */}
+      {/* Pie de página con créditos */}
       <footer className="max-w-md md:max-w-3xl lg:max-w-4xl mx-auto px-4 mt-8 mb-6 flex flex-col items-center text-center opacity-85">
         <div className="w-12 h-[2px] bg-white/10 mb-4 rounded-full"></div>
         <p className="text-[11px] text-slate-400 font-medium">
           © {new Date().getFullYear()} {menuData.restaurantName}. Todos los derechos reservados.
         </p>
         <p className="text-[10px] text-slate-500 mt-1.5 uppercase tracking-widest font-bold">
-          Desarrollado por <a href="#" className="text-red-500/90 hover:text-red-400 transition-colors">KorexDev</a>
+          Desarrollado por <span className="text-red-500/90 font-black">KorexDev</span>
         </p>
       </footer>
 
-      {/* --- CARRITO FLOTANTE ADAPTABLE --- */}
+      {/* Barra flotante del pedido activo (Visible cuando hay al menos 1 producto agregado) */}
       {totalItemsCount > 0 && (
         <div className="fixed bottom-4 left-4 right-4 max-w-md md:max-w-xl mx-auto z-40 animate-bounce-short">
           <div className="bg-slate-900/95 backdrop-blur-xl text-white p-4 rounded-2xl shadow-2xl border border-white/10 space-y-3">
             
+            {/* Selector de servicio: Retiro en tienda o Entrega a domicilio */}
             <div className="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-white/5">
               <button
                 onClick={() => setOrderType('pickup')}
@@ -177,6 +247,7 @@ export default function App() {
               </button>
             </div>
 
+            {/* Total acumulado y botón de envío directo a WhatsApp */}
             <div className="flex items-center justify-between pt-1">
               <div>
                 <p className="text-[11px] font-medium text-slate-400">
@@ -199,6 +270,7 @@ export default function App() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

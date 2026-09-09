@@ -3,7 +3,6 @@ import React from 'react';
 export default function CategorySidebar({ isOpen, onClose, categories, activeCategory, onSelectCategory, restaurantName, logo }) {
   if (!isOpen) return null;
 
-  // Se agregó el ícono de fuego para mantener la consistencia con App.jsx
   const allCategories = [{ id: 'all', name: '🔥 Todos los productos' }, ...categories];
 
   return (
@@ -15,10 +14,25 @@ export default function CategorySidebar({ isOpen, onClose, categories, activeCat
       ></div>
 
       {/* Panel Deslizante Lateral (Drawer) */}
-      <div className="relative w-80 max-w-[85%] bg-slate-900 h-full shadow-2xl border-r border-white/10 flex flex-col z-10">
+      <div className="relative w-80 max-w-[85%] bg-slate-900 h-full shadow-2xl border-r border-white/10 flex flex-col z-10 overflow-hidden">
         
+        {/* Fondo decorativo de hamburguesa en la parte superior derecha del drawer */}
+        <div 
+          className="absolute -right-6 -top-6 w-36 h-36 opacity-35 pointer-events-none select-none transform rotate-12 filter brightness-125 saturate-200 contrast-110 z-0"
+          style={{
+            maskImage: 'radial-gradient(circle, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 75%)',
+            WebkitMaskImage: 'radial-gradient(circle, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 75%)'
+          }}
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" 
+            alt="Hamburguesa decorativa" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+
         {/* Cabecera del Panel */}
-        <div className="p-5 border-b border-white/10 flex items-center justify-between bg-slate-950/50">
+        <div className="p-5 border-b border-white/10 flex items-center justify-between bg-slate-950/50 relative z-10">
           <div className="flex items-center gap-3 overflow-hidden">
             <img 
               src={logo} 
@@ -44,7 +58,7 @@ export default function CategorySidebar({ isOpen, onClose, categories, activeCat
         </div>
 
         {/* Lista de Categorías con tamaño equilibrado */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 relative z-10">
           {allCategories.map(cat => {
             const isActive = activeCategory === cat.id;
             return (
@@ -68,7 +82,7 @@ export default function CategorySidebar({ isOpen, onClose, categories, activeCat
         </div>
 
         {/* Pie del Panel */}
-        <div className="p-4 border-t border-white/10 text-center bg-slate-950/40">
+        <div className="p-4 border-t border-white/10 text-center bg-slate-950/40 relative z-10">
           <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
             Menú Digital Profesional
           </p>

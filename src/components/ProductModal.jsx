@@ -7,7 +7,7 @@ export default function ProductModal({ item, isOpen, onClose, quantity, onAdd, o
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Fondo oscuro con desenfoque */}
       <div 
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-slate-950/85 backdrop-blur-md transition-opacity"
         onClick={onClose}
       ></div>
 
@@ -17,31 +17,39 @@ export default function ProductModal({ item, isOpen, onClose, quantity, onAdd, o
         {/* Botón de cerrar */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 bg-slate-950/60 hover:bg-slate-950 text-slate-300 hover:text-white p-2.5 rounded-full backdrop-blur-md transition"
+          className="absolute top-4 right-4 z-20 bg-slate-950/80 hover:bg-slate-950 text-slate-300 hover:text-white p-2.5 rounded-full backdrop-blur-md transition shadow-lg"
+          aria-label="Cerrar"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
 
-        {/* Imagen Ampliada */}
-        <div className="w-full h-56 relative bg-slate-800">
+        {/* Imagen Ampliada con Insignia */}
+        <div className="w-full h-56 relative bg-slate-950 overflow-hidden">
           <img 
             src={item.image} 
             alt={item.name} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover filter saturate-125"
             onError={(e) => {
               e.target.src = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80";
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"></div>
+
+          {/* Insignia de Más Vendido (si aplica) */}
+          {item.isPopular && (
+            <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-red-600 to-orange-600 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg shadow-red-600/40 border border-red-400/30 flex items-center gap-1.5 animate-pulse">
+              <span>🔥</span> Más Vendido
+            </div>
+          )}
         </div>
 
         {/* Detalles del Producto */}
         <div className="p-6 space-y-4">
           <div>
             <h3 className="text-xl font-black text-white tracking-tight">{item.name}</h3>
-            <p className="text-red-400 font-extrabold text-lg mt-1">${item.price}</p>
+            <p className="text-red-400 font-extrabold text-xl mt-1">${item.price}</p>
           </div>
 
           <div>
@@ -63,7 +71,7 @@ export default function ProductModal({ item, isOpen, onClose, quantity, onAdd, o
                   onClick={() => {
                     onAdd(item);
                   }}
-                  className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-red-600/30 active:scale-95 flex items-center gap-2"
+                  className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white font-black text-xs px-5 py-3.5 rounded-2xl transition-all shadow-xl shadow-red-600/30 active:scale-95 flex items-center gap-2 uppercase tracking-wider"
                 >
                   <span>Agregar al pedido</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,17 +79,17 @@ export default function ProductModal({ item, isOpen, onClose, quantity, onAdd, o
                   </svg>
                 </button>
               ) : (
-                <div className="flex items-center bg-slate-800 rounded-xl border border-red-500/40 overflow-hidden shadow-md">
+                <div className="flex items-center bg-slate-950 rounded-2xl border border-red-500/50 overflow-hidden shadow-lg p-1">
                   <button 
                     onClick={() => onRemove(item.id)}
-                    className="px-3.5 py-2 text-slate-300 hover:bg-slate-700 transition font-bold text-xs"
+                    className="w-9 h-9 rounded-xl bg-slate-900 text-slate-200 hover:bg-slate-800 transition font-black text-sm flex items-center justify-center active:scale-95"
                   >
                     -
                   </button>
-                  <span className="px-3 text-xs font-bold text-red-400">{quantity}</span>
+                  <span className="w-8 text-center font-black text-red-400 text-sm">{quantity}</span>
                   <button 
                     onClick={() => onAdd(item)}
-                    className="px-3.5 py-2 text-slate-300 hover:bg-slate-700 transition font-bold text-xs"
+                    className="w-9 h-9 rounded-xl bg-slate-900 text-slate-200 hover:bg-slate-800 transition font-black text-sm flex items-center justify-center active:scale-95"
                   >
                     +
                   </button>

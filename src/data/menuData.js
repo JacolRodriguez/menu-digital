@@ -2,7 +2,7 @@ export const menuData = {
   restaurantName: "D' Lucy Sabor Familiar",
   whatsappNumber: "18096277777",
   address: "Esq. Josesito, D.M. Baitoa, Santiago, R.D.",
-  logo: "/D-LUCY-Sabor-Familiar-burger.jpg",
+  logo: `${import.meta.env.BASE_URL}D-LUCY-Sabor-Familiar-burger.jpg`,
   
   categories: [
     { id: "hamburguesas", name: "🍔 Hamburguesas" },
